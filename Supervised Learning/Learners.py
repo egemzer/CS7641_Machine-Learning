@@ -1,4 +1,5 @@
 # ###CS7641 - Machine Learning Project 1 code: Supervised Learning ###
+# This Python file uses the following encoding: utf-8
 # python3
 # GT alias: gth659q
 import timeit
@@ -23,17 +24,15 @@ import warnings
 # based on https://www.dataquest.io/blog/learning-curves-machine-learning/.
 
 
-# =====================================
-# ### Data loading (also in README) ###
-# =====================================
-# IMPORTANT! To run this code, you need to save the datasets to your local machine, in the same folder as this code.
+# =====================
+# ### Data loading ###
+# =====================
 
 # STEP 1: Download the Contraceptives Dataset from my Github into the same folder as this code.
 # You can also get the data here: https://www.openml.org/d/23 (download as CSV)
 
 # open and create a pandas dataframe
-contra_df = pd.read_csv('ContraceptivesMethodsData.csv', na_values = "?")
-# contra_df = contra_df.astype('int64').dtypes
+contra_df = pd.read_csv('ContraceptivesMethodsData.csv', na_values="?")
 contra_df.apply(pd.to_numeric)
 
 # Check the frame (first 5 rows) to ensure all the columns are there
@@ -500,9 +499,9 @@ def plot_random_tree(clf, featureNames, fileName, X_train, y_train):
     graph = pydotplus.graph_from_dot_data(dot_data)
     graph.write_png(fileName)
 
-# # =========================================
-# # ### Decision Tree Learner (with Pruning)
-# # =========================================
+#=========================================
+# Decision Tree Learner (with Pruning)
+#=========================================
 # manual tuning approach leveraged from: https://www.kaggle.com/drgilermo/playing-with-the-knobs-of-sklearn-decision-tree
 # Decision tree builder that also does pruning and calculates F1 score (due to non-binary, multi-classification task, see: https://medium.com/usf-msds/choosing-the-right-metric-for-evaluating-machine-learning-models-part-2-86d5649a5428)
 
@@ -515,8 +514,6 @@ def dt_initial_tuning(X_train, y_train, max_features):
     params = {}
     params['criterion'] = ["gini", "entropy"]
     params['max_depth'] = np.arange(2, max_depth_absolute, 2)
-
-    # params['min_samples_split'] = list(np.arange(0.05, 1, .01))
 
     bestTree = GridSearchCV(
         estimator=DecisionTreeClassifier(random_state=17, max_features=max_features),
@@ -545,7 +542,6 @@ def dt_initial_tuning(X_train, y_train, max_features):
     ax.set_ylabel('3-Fold Cross-validation Mean F1 Score')
     ax.legend(loc="best")
     plt.show()
-    print("you got here!")
 
     return bestTree.best_params_['max_depth'], bestTree.best_params_['criterion']
 
@@ -588,8 +584,6 @@ def finalDT(X_train, y_train, max_features, max_depth, criterion):
 # ======= Decision Tree on Contraceptive Methods Dataset ======= #
 # # Try some manual hyperparameter tuning, if you please
 # dt_manual_tuning(X_train_contra, y_train_contra, X_test_contra, y_test_contra, "Contraceptives Methods")
-
-
 
 # Get the hyperparameters for Contraceptive Methods via GridSearchCV and build the classifier / estimator
 max_depth_contra, criterion_contra = dt_initial_tuning(X_train_res_ekg, y_train_res_ekg, max_features=9)
@@ -662,7 +656,6 @@ def boostedDT(X_train, y_train, X_test, y_test, max_depth, datasetName):
     # plt.legend(loc='best')
     # plt.tight_layout()
     # plt.show()
-    # print("you got here!")
 
 def final_boosted_DT(X_train, y_train, max_depth, max_features, param1, param2):
     warnings.filterwarnings('ignore', 'Solver terminated early.*')
@@ -762,7 +755,6 @@ def knn_manual_tuning(X_train, y_train, X_test, y_test, datasetName):
     plt.legend(loc='best')
     plt.tight_layout()
     plt.show()
-    print("you got here!")
 
 def final_knn(X_train, y_train, param1, param2):
     warnings.filterwarnings('ignore', 'Solver terminated early.*')
@@ -800,14 +792,11 @@ def final_knn(X_train, y_train, param1, param2):
 
     return bestKNN.best_params_['p'], bestKNN.best_params_['n_neighbors']
 
-# # ======== kNN for Both Datasets ========== #
-# # Try some manual hyperparameter tuning, if you please
-# # KNN(X_train_contra, y_train_contra, X_test_contra, y_test_contra, datasetName="Contraceptives Methods")
-# # KNN(X_train=X_train_res_ekg, y_train=y_train_res_ekg, X_test=X_test_ekg, y_test=y_test_ekg, datasetName="Arrhythmia")
-# p = 1
-# n_neighbor_contra = 18
-# n_neighbor_ekg = 2
-#
+# ======== kNN for Both Datasets ========== #
+# Try some manual hyperparameter tuning, if you please
+# KNN(X_train_contra, y_train_contra, X_test_contra, y_test_contra, datasetName="Contraceptives Methods")
+# KNN(X_train=X_train_res_ekg, y_train=y_train_res_ekg, X_test=X_test_ekg, y_test=y_test_ekg, datasetName="Arrhythmia")
+
 # Contraceptives
 contra_knn_p, contra_knn_nneighbors = final_knn(X_train=X_train_contra, y_train=y_train_contra, param1='n_neighbors', param2='p')
 contra_knn_estimator = KNeighborsClassifier(n_jobs=-1, p=contra_knn_p, n_neighbors=contra_knn_nneighbors)
@@ -863,7 +852,6 @@ def nn_manual_tuning(X_train, y_train, X_test, y_test, datasetName):
     plt.legend(loc='best')
     plt.tight_layout()
     plt.show()
-    print("you got here!")
 
 def nn_first_tuning(X_train, y_train, param1, param2):
     warnings.filterwarnings('ignore', 'Solver terminated early.*')
@@ -908,7 +896,6 @@ def final_nn(X_train, y_train, param1, param2, solver, max_iter):
     # Parameters to optimize
     params = {}
     params['hidden_layer_sizes'] = [(10, 10, 10), (30, 30, 30), (20, 50), (10,), (30,), (70,), (100,), (150,), (500,)]  # np.linspace(5, 150, 10).astype('int')  # The ith element represents the number of neurons in the ith hidden layer. Default(100,)
-    # params['alpha'] = [0.0001, 0.1, 0.25, 0.75, 1.0]  # L2 penalty (regularization term) parameter.
     params['activation'] = ['identity', 'logistic', 'tanh', 'relu']
 
     bestNN = GridSearchCV(MLPClassifier(random_state=17, solver=solver, max_iter=max_iter), scoring='f1_weighted', param_grid=params, cv=3, n_jobs=-1)
@@ -975,19 +962,17 @@ def plot_iterations_nn(X_train, y_train, estimator):
 # nn_manual_tuning(X_train=X_train_res_ekg, y_train=y_train_res_ekg, X_test=X_test_ekg, y_test=y_test_ekg, datasetName="Arrhythmia")
 
 # Contraceptives hyperparameter tuning (via x-validation) and final classifier evalulation
-# contra_nn_lr, solver_contra = nn_first_tuning(X_train=X_train_contra, y_train=y_train_contra, param2='learning_rate', param1='solver')
 contra_nn_activation, contra_nn_hls = final_nn(X_train=X_train_contra, y_train=y_train_contra, solver='lbfgs', param2='activation', param1='hidden_layer_size', max_iter=200)
 contra_nn_estimator = MLPClassifier(activation=contra_nn_activation, max_iter=200, solver='lbfgs', hidden_layer_sizes=contra_nn_hls, random_state=17)
-# plot_iterations_nn(X_train=X_train_contra, y_train=y_train_contra, estimator=contra_nn_estimator)
+plot_iterations_nn(X_train=X_train_contra, y_train=y_train_contra, estimator=contra_nn_estimator)
 contra_train_sizes, contra_train_scores_mean, contra_train_time_mean, contra_test_time_mean = plot_learning_curve(estimator=contra_nn_estimator, learner='Neural Network', dataset="Contraceptive Methods", X_train=X_train_contra, y_train=y_train_contra)
 contra_nn_test_f1, contra_nn_test_acc, contra_nn_test_precision, contra_nn_test_recall, contra_nn_train_time, contra_nn_test_time = evaluate_classifier(classifier=contra_nn_estimator, X_train=X_train_contra, X_test=X_test_contra, y_train=y_train_contra, y_test=y_test_contra, learner='Neural Network', dataset="Contraceptive Methods", class_names=contra_targets, feature_names=contra_features)
 contra_nn_results = ['contra_nn_results', contra_nn_test_f1, contra_nn_test_acc, contra_nn_test_precision, contra_nn_test_recall, contra_nn_train_time, contra_nn_test_time]
 
 # Arrhythmia x-validation and final classifier evalulation
-# ekg_nn_lr, solver_ekg = nn_first_tuning(X_train=X_train_res_ekg, y_train=y_train_res_ekg, param2='learning_rate', param1='solver')
 ekg_nn_activation, ekg_nn_hls = final_nn(X_train=X_train_res_ekg, y_train=y_train_res_ekg, solver='lbfgs', param2='activation', param1='hidden_layer_size', max_iter=1000)
 ekg_nn_estimator = MLPClassifier(activation=ekg_nn_activation, max_iter=400, solver='lbfgs', hidden_layer_sizes=ekg_nn_hls)
-# plot_iterations_nn(X_train=X_train_res_ekg, y_train=y_train_res_ekg, estimator=ekg_nn_estimator)
+plot_iterations_nn(X_train=X_train_res_ekg, y_train=y_train_res_ekg, estimator=ekg_nn_estimator)
 ekg_train_sizes, ekg_train_scores_mean, ekg_train_time_mean, ekg_test_time_mean = plot_learning_curve(estimator=ekg_nn_estimator, learner='Neural Network', dataset="Arrhythmia (EKG)", X_train=X_ekg, y_train=y_ekg, cv=4)
 ekg_nn_test_f1, ekg_nn_test_acc, ekg_nn_test_precision, ekg_nn_test_recall, ekg_nn_train_time, ekg_nn_test_time = evaluate_classifier(classifier=ekg_nn_estimator, X_train=X_train_res_ekg, X_test=X_test_ekg, y_train=y_train_res_ekg, y_test=y_test_ekg, learner='Neural Network', dataset="Arrhythmia (EKG)", class_names=ekg_classes, feature_names=ekg_features)
 ekg_nn_results = ['ekg_nn_results', ekg_nn_test_f1, ekg_nn_test_acc, ekg_nn_test_precision, ekg_nn_test_recall, ekg_nn_train_time, ekg_nn_test_time]
@@ -1032,7 +1017,6 @@ def svm_manual_tuning(X_train, y_train, X_test, y_test, datasetName):
     plt.legend(loc='best')
     plt.tight_layout()
     plt.show()
-    print("you got here!")
 
 def final_svm(X_train, y_train, param1, param2, kernel):
     warnings.filterwarnings('ignore', 'Solver terminated early.*')
@@ -1098,7 +1082,6 @@ def plot_iterations_svm(X_train, y_train, estimator):
     plt.plot(params['max_iter'], test_scores_mean, 'o-', color="g", label="Cross-validation testing score")
     plt.legend(loc="best")
 
-    # show the plot!
     plt.show()
 
 # # ==== SVMs for Both Datasets ==== #
@@ -1114,7 +1097,7 @@ kernel2 = 'linear'
 # Using Kernel = 'rbf'
 contra_svc_c, contra_svc_gamma = final_svm(X_train=X_train_contra, y_train=y_train_contra, param1='C', param2='gamma', kernel=kernel1)
 contra_svc_estimator_1 = SVC(kernel=kernel1, C=contra_svc_c, gamma=contra_svc_gamma, random_state=17, max_iter=10000)
-# plot_iterations_svm(X_train=X_train_contra, y_train=y_train_contra, estimator=contra_svc_estimator_1)
+plot_iterations_svm(X_train=X_train_contra, y_train=y_train_contra, estimator=contra_svc_estimator_1)
 contra_train_sizes, contra_train_scores_mean, contra_train_time_mean, contra_test_time_mean = plot_learning_curve(estimator=contra_svc_estimator_1 , learner='SVM', dataset="Contraceptive Methods", X_train=X_train_contra, y_train=y_train_contra)
 contra_svm_k1_test_f1, contra_svm_k1_test_acc, contra_svm_k1_test_precision, contra_svm_k1_test_recall, contra_svm_k1_train_time, contra_svm_k1_test_time = evaluate_classifier(classifier=contra_svc_estimator_1, X_train=X_train_contra, X_test=X_test_contra, y_train=y_train_contra, y_test=y_test_contra, learner='SVM', dataset="Contraceptive Methods", class_names=contra_targets, feature_names=contra_features)
 contra_svm_k_rbf_results = ['contra_svm_k_rbf_results', contra_svm_k1_test_f1, contra_svm_k1_test_acc, contra_svm_k1_test_precision, contra_svm_k1_test_recall, contra_svm_k1_train_time, contra_svm_k1_test_time]
@@ -1122,7 +1105,7 @@ contra_svm_k_rbf_results = ['contra_svm_k_rbf_results', contra_svm_k1_test_f1, c
 # Using Kernel = 'linear'
 contra_svc_c, contra_svc_gamma = final_svm(X_train=X_train_contra, y_train=y_train_contra, param1='C', param2='gamma', kernel=kernel2)
 contra_svc_estimator_2 = SVC(kernel=kernel2, degree=3, random_state=17, max_iter=10000)
-# plot_iterations_svm(X_train=X_train_contra, y_train=y_train_contra, estimator=contra_svc_estimator_2)
+plot_iterations_svm(X_train=X_train_contra, y_train=y_train_contra, estimator=contra_svc_estimator_2)
 contra_train_sizes, contra_train_scores_mean, contra_train_time_mean, contra_test_time_mean = plot_learning_curve(estimator=contra_svc_estimator_1 , learner='SVM', dataset="Contraceptive Methods", X_train=X_train_contra, y_train=y_train_contra)
 contra_svm_k2_test_f1, contra_svm_k2_test_acc, contra_svm_k2_test_precision, contra_svm_k2_test_recall, contra_svm_k2_train_time, contra_svm_k2_test_time = evaluate_classifier(classifier=contra_svc_estimator_2, X_train=X_train_contra, X_test=X_test_contra, y_train=y_train_contra, y_test=y_test_contra, learner='SVM', dataset="Contraceptive Methods", class_names=contra_targets, feature_names=contra_features)
 contra_svm_k_linear_results = ['contra_svm_k_linear_results', contra_svm_k2_test_f1, contra_svm_k2_test_acc, contra_svm_k2_test_precision, contra_svm_k2_test_recall, contra_svm_k2_train_time, contra_svm_k2_test_time]
@@ -1132,7 +1115,7 @@ contra_svm_k_linear_results = ['contra_svm_k_linear_results', contra_svm_k2_test
 # Using Kernel = 'rbf'
 ekg_svc_c, ekg_svc_gamma = final_svm(X_train=X_train_res_ekg, y_train=y_train_res_ekg, param1='C', param2='gamma', kernel=kernel1)
 ekg_svc_estimator_1 = SVC(kernel=kernel1, C=ekg_svc_c, gamma=ekg_svc_gamma, random_state=17, max_iter=10000)
-# plot_iterations_svm(X_train=X_train_res_ekg, y_train=y_train_res_ekg, estimator=ekg_svc_estimator_1)
+plot_iterations_svm(X_train=X_train_res_ekg, y_train=y_train_res_ekg, estimator=ekg_svc_estimator_1)
 ekg_train_sizes, ekg_train_scores_mean, ekg_train_time_mean, ekg_test_time_mean = plot_learning_curve(estimator=ekg_svc_estimator_1, learner='SVM', dataset="Arrhythmia (EKG)", X_train=X_ekg, y_train=y_ekg, cv=4)
 ekg_svm_k1_test_f1, ekg_svm_k1_test_acc, ekg_svm_k1_test_precision, ekg_svm_k1_test_recall, ekg_svm_k1_train_time, ekg_svm_k1_test_time = evaluate_classifier(classifier=ekg_svc_estimator_1, X_train=X_train_res_ekg, X_test=X_test_ekg, y_train=y_train_res_ekg, y_test=y_test_ekg, learner='SVM', dataset="Arrhythmia (EKG)", class_names=ekg_classes, feature_names=ekg_features)
 ekg_svm_k_rbf_results = ['ekg_svm_k_rbf_results', ekg_svm_k1_test_f1, ekg_svm_k1_test_acc, ekg_svm_k1_test_precision, ekg_svm_k1_test_recall, ekg_svm_k1_train_time, ekg_svm_k1_test_time]
@@ -1140,7 +1123,7 @@ ekg_svm_k_rbf_results = ['ekg_svm_k_rbf_results', ekg_svm_k1_test_f1, ekg_svm_k1
 # Using Kernel = 'linear'
 ekg_svc_c, ekg_svc_gamma = final_svm(X_train=X_train_res_ekg, y_train=y_train_res_ekg, param1='C', param2='gamma', kernel=kernel2)
 ekg_svc_estimator_2 = SVC(kernel=kernel2, C=ekg_svc_c, gamma=ekg_svc_gamma, random_state=17, max_iter=10000)
-# plot_iterations_svm(X_train=X_train_res_ekg, y_train=y_train_res_ekg, estimator=ekg_svc_estimator_2)
+plot_iterations_svm(X_train=X_train_res_ekg, y_train=y_train_res_ekg, estimator=ekg_svc_estimator_2)
 ekg_train_sizes, ekg_train_scores_mean, ekg_train_time_mean, ekg_test_time_mean = plot_learning_curve(estimator=ekg_svc_estimator_2, learner='SVM', dataset="Arrhythmia (EKG)", X_train=X_ekg, y_train=y_ekg, cv=4)
 ekg_svm_k2_test_f1, ekg_svm_k2_test_acc, ekg_svm_k2_test_precision, ekg_svm_k2_test_recall, ekg_svm_k2_train_time, ekg_svm_k2_test_time = evaluate_classifier(classifier=ekg_svc_estimator_2, X_train=X_train_res_ekg, X_test=X_test_ekg, y_train=y_train_res_ekg, y_test=y_test_ekg, learner='SVM', dataset="Arrhythmia (EKG)", class_names=ekg_classes, feature_names=ekg_features)
 ekg_svm_k_linear_results = ['ekg_svm_k_linear_results', ekg_svm_k2_test_f1, ekg_svm_k2_test_acc, ekg_svm_k2_test_precision, ekg_svm_k2_test_recall, ekg_svm_k2_train_time, ekg_svm_k2_test_time]
@@ -1149,5 +1132,6 @@ print("Done with SVMs for both Contraceptives and Arrhythmia.")
 
 #========= Tabulate the final data ========#
 from tabulate import tabulate
+
 print(tabulate([contra_dt_results, contra_boost_results, contra_knn_results, contra_nn_results, contra_svm_k_rbf_results, contra_svm_k_linear_results], headers=['Learner', 'F1_Weighted', 'Accuracy', 'Precision', 'Recall', 'Training time (ms)', 'Prediction time (ms)']))
 print(tabulate([ekg_dt_results, ekg_boost_results, ekg_knn_results, ekg_nn_results, ekg_svm_k_rbf_results, ekg_svm_k_linear_results], headers=['Learner', 'F1_Weighted', 'Accuracy', 'Precision', 'Recall', 'Training time (ms)', 'Prediction time (ms)']))
