@@ -1,0 +1,7 @@
+## CS 7641_Machine_Learning 
+### Assignment 2: Randomized Optimization
+
+This project was completed by @egemzer (gth659q) for master's degree course in Machine Learning at Georgia Tech. The project seeks to compare and contrast four different local random search algorithms against differnet problem types and in determining weights for a neural network.
+
+### Code Location
+https://github.com/egemzer/CS7641_Machine_Learning/tree/master/Randomized%20Optimiziation
