@@ -15,7 +15,7 @@ The Travelling Salesman Problem, TSP:
 Citation: WR Hamilton and Thomas Kirkman (1800's) per https://en.wikipedia.org/wiki/Travelling_salesman_problem
 """
 
-num_cities = 50
+num_cities = 22
 iterations_range = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]
 OUTPUT_DIRECTORY = './Experiments/TSP'
 print('%s City TSP Optimization' %(num_cities))
@@ -39,41 +39,41 @@ def plot_time_single_algo(title, iterations, time, algorithm):
 	plt.legend(loc="best")
 	plt.savefig(title + " - Time.png")
 
-# #========== Random Hill Climb ==========#
-# time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-# print("Starting Random Hill Climbing at: " + time)
-# # Optimize the algorithm parameters (Manual)
-# def opt_rhc_params():
-# 	rhc = mlrose.runners.RHCRunner(problem=problem,
-# 								   experiment_name='Optimal Params for TSP RHC',
-# 								   output_directory=OUTPUT_DIRECTORY,
-# 								   seed=17,
-# 								   iteration_list=2 ** np.arange(1,12),
-# 								   max_attempts=5000,
-# 								   restart_list=[0, 5, 20, 30, 45, 60, 75])
-# 	rhc_df_run_stats, rhc_df_run_curves = rhc.run()
-# 	ideal_rs = rhc_df_run_stats[['current_restart']].iloc[rhc_df_run_stats[['Fitness']].idxmin()] # from the output of the experiment above
-# 	return rhc_df_run_stats, rhc_df_run_curves, ideal_rs
-#
-# # # Done on a complex example then  hard coded optimized parameter value(s).
-# # rhc_df_run_stats, rhc_df_run_curves, ideal_rs = opt_rhc_params()
-#
-# ideal_rs = 75  # this came from the results of the experiment commented out, above.
-#
-# rhc_best_state = []
-# rhc_best_fitness = []
-# rhc_convergence_time = []
-# for iter in iterations_range:
-# 	start_time = timeit.default_timer()
-# 	best_state, best_fitness, curve = mlrose.random_hill_climb(problem=problem, max_iters=iter, max_attempts=5000,
-# 														restarts=ideal_rs, curve=True)
-# 	end_time = timeit.default_timer()
-# 	convergence_time = (end_time - start_time)  # seconds
-# 	rhc_best_state.append(best_state)
-# 	rhc_best_fitness.append(best_fitness)
-# 	rhc_convergence_time.append(convergence_time)
-#
-# print('The fitness at the best state found using Random Hill Climbing is: ', min(rhc_best_fitness))
+#========== Random Hill Climb ==========#
+time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+print("Starting Random Hill Climbing at: " + time)
+# Optimize the algorithm parameters (Manual)
+def opt_rhc_params():
+	rhc = mlrose.runners.RHCRunner(problem=problem,
+								   experiment_name='Optimal Params for TSP RHC',
+								   output_directory=OUTPUT_DIRECTORY,
+								   seed=17,
+								   iteration_list=2 ** np.arange(1,12),
+								   max_attempts=5000,
+								   restart_list=[0, 5, 20, 30, 45, 60, 75])
+	rhc_df_run_stats, rhc_df_run_curves = rhc.run()
+	ideal_rs = rhc_df_run_stats[['current_restart']].iloc[rhc_df_run_stats[['Fitness']].idxmin()] # from the output of the experiment above
+	return rhc_df_run_stats, rhc_df_run_curves, ideal_rs
+
+# # Done on a complex example then  hard coded optimized parameter value(s).
+# rhc_df_run_stats, rhc_df_run_curves, ideal_rs = opt_rhc_params()
+
+ideal_rs = 75  # this came from the results of the experiment commented out, above.
+
+rhc_best_state = []
+rhc_best_fitness = []
+rhc_convergence_time = []
+for iter in iterations_range:
+	start_time = timeit.default_timer()
+	best_state, best_fitness, curve = mlrose.random_hill_climb(problem=problem, max_iters=iter, max_attempts=5000,
+														restarts=ideal_rs, curve=True)
+	end_time = timeit.default_timer()
+	convergence_time = (end_time - start_time)  # seconds
+	rhc_best_state.append(best_state)
+	rhc_best_fitness.append(best_fitness)
+	rhc_convergence_time.append(convergence_time)
+
+print('The fitness at the best state found using Random Hill Climbing is: ', min(rhc_best_fitness))
 
 #========== Genetic Algorithms ==========#
 time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")

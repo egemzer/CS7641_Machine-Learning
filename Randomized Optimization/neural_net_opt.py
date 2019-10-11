@@ -84,10 +84,11 @@ contra_scaler = StandardScaler()
 X_train_contra = contra_scaler.fit_transform(X_train_contra)
 X_test_contra = contra_scaler.transform(X_test_contra)
 
-def build_model(algorithm, hidden_nodes, activation, schedule=mlrose.GeomDecay(init_temp=5000), restarts=75, population=300, mutation=0.2):
+def build_model(algorithm, hidden_nodes, activation, schedule=mlrose.GeomDecay(init_temp=5000), restarts=75,
+                population=300, mutation=0.2, max_iters=20000, learning_rate=0.01):
     nn_model = mlrose.neural.NeuralNetwork(hidden_nodes=hidden_nodes, activation=activation,
-                                        algorithm=algorithm, max_iters=20000,
-                                        bias=True, is_classifier=True, learning_rate=0.1,
+                                        algorithm=algorithm, max_iters=max_iters,
+                                        bias=True, is_classifier=True, learning_rate=learning_rate,
                                         early_stopping=False, restarts = restarts, clip_max=1,
                                         schedule=schedule,
                                         max_attempts=1000, pop_size=population, mutation_prob=mutation,
@@ -245,7 +246,8 @@ def evaluate_model(nn_model, search_algo, X_train, X_test, y_train, y_test, clas
 # Gradient Descent
 time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 print("Starting Gradient Descent Learning Curves at: " + time)
-nn_gd_model = build_model(algorithm='gradient_descent', hidden_nodes=hidden_nodes, activation='relu')
+nn_gd_model = build_model(algorithm='gradient_descent', hidden_nodes=hidden_nodes, activation='relu',
+                          max_iters=5000, learning_rate=0.001)
 
 gd_contra_train_sizes, gd_contra_train_scores_mean, gd_contra_train_time_mean, gd_contra_test_time_mean = \
      plot_learning_curve(estimator=nn_gd_model, search_algo='Gradient Descent', dataset="Contraceptive Methods", X_train=X_train_contra, y_train=y_hot_train_contra, cv=3)
@@ -260,7 +262,8 @@ gd_nn_test_f1, gd_nn_test_acc, gd_nn_test_precision, gd_nn_test_recall, gd_nn_tr
 # Random Hill Climbing
 time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 print("Starting Random Hill Climbing Learning Curves at: " + time)
-nn_rhc_model = build_model(algorithm='random_hill_climb', hidden_nodes=hidden_nodes, activation='relu', restarts=75)
+nn_rhc_model = build_model(algorithm='random_hill_climb', hidden_nodes=hidden_nodes, activation='relu',
+                           restarts=75, max_iters=20000, learning_rate=0.01)
 
 rhc_contra_train_sizes, rhc_contra_train_scores_mean, rhc_contra_train_time_mean, rhc_contra_test_time_mean = \
     plot_learning_curve(estimator=nn_rhc_model, search_algo='RHC', dataset="Contraceptive Methods", X_train=X_train_contra, y_train=y_hot_train_contra, cv=3)
@@ -274,7 +277,8 @@ rhc_nn_test_f1, rhc_nn_test_acc, rhc_nn_test_precision, rhc_nn_test_recall, rhc_
 # Genetic Algorithms
 time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 print("Starting Genetic Algorithms Learning Curves at: " + time)
-nn_ga_model = build_model(algorithm='genetic_alg', hidden_nodes=hidden_nodes, activation='relu', population=300, mutation=0.2)
+nn_ga_model = build_model(algorithm='genetic_alg', hidden_nodes=hidden_nodes, activation='relu',
+                          population=300, mutation=0.2, max_iters=5000, learning_rate=0.01)
 
 ga_contra_train_sizes, ga_contra_train_scores_mean, ga_contra_train_time_mean, ga_contra_test_time_mean = \
     plot_learning_curve(estimator=nn_ga_model, search_algo='GA', dataset="Contraceptive Methods", X_train=X_train_contra, y_train=y_hot_train_contra, cv=3)
@@ -288,7 +292,9 @@ ga_nn_test_f1, ga_nn_test_acc, ga_nn_test_precision, ga_nn_test_recall, ga_nn_tr
 # Simulated Annealing
 time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 print("Starting Simulated Annealing Learning Curves at: " + time)
-nn_sa_model = build_model(algorithm='simulated_annealing', hidden_nodes=hidden_nodes, activation='relu', schedule=mlrose.algorithms.decay.ArithDecay(init_temp=5000, decay=0.001, min_temp=0.001))
+nn_sa_model = build_model(algorithm='simulated_annealing', hidden_nodes=hidden_nodes, activation='relu',
+                          schedule=mlrose.algorithms.decay.ArithDecay(init_temp=5000, decay=0.001, min_temp=0.001),
+                          max_iters=20000, learning_rate=0.01)
 
 sa_contra_train_sizes, sa_contra_train_scores_mean, sa_contra_train_time_mean, sa_contra_test_time_mean = \
     plot_learning_curve(estimator=nn_sa_model, search_algo='SA', dataset="Contraceptive Methods", X_train=X_train_contra, y_train=y_hot_train_contra, cv=3)

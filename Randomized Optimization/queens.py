@@ -15,7 +15,7 @@ Thus, a solution requires that no two queens share the same row, column, or diag
 Citation: https://www.geeksforgeeks.org/n-queen-problem-using-branch-and-bound/
 """
 
-num_queens = 5
+num_queens = 22
 iterations_range = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048]
 OUTPUT_DIRECTORY = './Experiments/Queens'
 print('%s Queens Optimization' %(num_queens))
