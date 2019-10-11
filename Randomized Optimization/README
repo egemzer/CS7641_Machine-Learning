@@ -26,7 +26,7 @@ also: mlrose hiive version 1.2.0 at commit 452810cde6502963afd75bb44354edf24e562
 To test this code on a local machine, you'll want to download the dataset and put it in the same directory as the code.
 
 #### ...for Optimization Problems
-All of the optimization problems are set to a high complexity problem domain (22 Queens, 22 City TSP, 20 Item Knapsack, and 50-bit FlipFlop.
+All of the optimization problems are set to a high complexity problem domain (22 Queens, 22 City TSP, 20 Item Knapsack, and 50-bit FlipFlop) to illustrate the strengths and weaknesses of the RSAs.
 **Compute Warning**: These algorithms, especially MIMIC and GA on the high complexity problems, take hours or even days to converge.
 
 - run 22-Queens using the command 'python3 queens.py'
