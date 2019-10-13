@@ -169,6 +169,7 @@ def opt_mimic_params():
 # mmc_df_run_stats, mmc_df_run_curves, ideal_keep_prcnt = opt_mimic_params()
 
 ideal_keep_prcnt = 0.5  # this came from the results of the experiment commented out, above.
+ideal_pop_size_mimic = 300
 
 mimic_best_state = []
 mimic_best_fitness = []
@@ -177,7 +178,7 @@ for iter in iterations_range:
 	start_time = timeit.default_timer()
 	best_state, best_fitness, curve = mlrose.mimic(problem=problem, keep_pct=ideal_keep_prcnt,
 											max_attempts=5000, max_iters=iter,
-											pop_size=ideal_pop_size, curve=True)
+											pop_size=ideal_pop_size_mimic, curve=True)
 	end_time = timeit.default_timer()
 	convergence_time = (end_time - start_time)  # seconds
 	mimic_best_state.append(best_state)
