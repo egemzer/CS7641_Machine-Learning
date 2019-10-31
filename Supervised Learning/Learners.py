@@ -23,7 +23,6 @@ import warnings
 # confusion matrix
 # based on https://www.dataquest.io/blog/learning-curves-machine-learning/.
 
-
 # =====================
 # ### Data loading ###
 # =====================
@@ -261,6 +260,8 @@ def  get_samples_leaf(n):
 
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, confusion_matrix
 import itertools
+from sklearn.ensemble import GradientBoostingClassifier
+
 
 def plot_confusion_matrix(y_true, y_pred, target_names, learner, dataset, cmap=plt.cm.RdPu, normalize=True):
         """
@@ -591,12 +592,12 @@ msl_contra, max_leaf_nodes_contra = finalDT(X_train_contra, y_train_contra, max_
 contra_estimator = DecisionTreeClassifier(criterion=criterion_contra, max_features=9, min_samples_leaf=msl_contra, max_depth=max_depth_contra, max_leaf_nodes=max_leaf_nodes_contra, random_state=17)
 contra_train_sizes, contra_train_scores_mean, contra_train_time_mean, contra_test_time_mean = plot_learning_curve(estimator=contra_estimator, learner='Decision Tree', dataset="Contraceptive Methods", X_train=X_train_contra, y_train=y_train_contra)
 contra_dt_test_f1, contra_dt_test_acc, contra_dt_test_precision, contra_dt_test_recall, contra_dt_train_time, contra_dt_test_time =  evaluate_classifier(classifier=contra_estimator, X_train=X_train_contra, X_test=X_test_contra, y_train=y_train_contra, y_test=y_test_contra, learner='Decision Tree', dataset="Contraceptive Methods", class_names=contra_targets, feature_names=contra_features)
-print('Leaves count before pruning: %d' % contra_estimator.get_n_leaves())
+# print('Leaves count before pruning: %d' % contra_estimator.get_n_leaves())
 plot_tree(clf=contra_estimator, featureNames=contra_features, fileName="Pre-pruned Contraceptives DT.png")
 
 # Prune the classifier, plot learning curves, and evaluate the final classifier
 pruned_contra_clf = prune(contra_estimator, threshold=5)
-print('Leaves count after pruning: %d' % pruned_contra_clf.get_n_leaves())
+# print('Leaves count after pruning: %d' % pruned_contra_clf.get_n_leaves())
 plot_tree(clf=pruned_contra_clf, featureNames=contra_features, fileName="Post-pruned Contraceptives DT.png")
 contra_train_sizes, contra_train_scores_mean, contra_train_time_mean, contra_test_time_mean = plot_learning_curve(estimator=pruned_contra_clf, learner='Decision Tree', dataset="Contraceptive Methods", X_train=X_train_contra, y_train=y_train_contra)
 contra_dt_test_f1, contra_dt_test_acc, contra_dt_test_precision, contra_dt_test_recall, contra_dt_train_time, contra_dt_test_time =  evaluate_classifier(classifier=pruned_contra_clf, X_train=X_train_contra, X_test=X_test_contra, y_train=y_train_contra, y_test=y_test_contra, learner='Decision Tree', dataset="Contraceptive Methods", class_names=contra_targets, feature_names=contra_features)
@@ -612,12 +613,12 @@ msl_ekg, max_leaf_nodes_ekg = finalDT(X_train_res_ekg, y_train_res_ekg, max_feat
 ekg_estimator = DecisionTreeClassifier(criterion=criterion_ekg, max_features=20, min_samples_leaf=msl_ekg, max_depth=max_depth_ekg, max_leaf_nodes=max_leaf_nodes_ekg, random_state=17)
 ekg_train_sizes, ekg_train_scores_mean, ekg_train_time_mean, ekg_test_time_mean = plot_learning_curve(estimator=ekg_estimator, learner='Decision Tree', dataset="Arrhythmia (EKG)", X_train=X_ekg, y_train=y_ekg, cv=4)
 ekg_dt_test_f1, ekg_dt_test_acc, ekg_dt_test_precision, ekg_dt_test_recall, ekg_dt_train_time, ekg_dt_test_time  = evaluate_classifier(classifier=ekg_estimator, X_train=X_train_res_ekg, X_test=X_test_ekg, y_train=y_train_res_ekg, y_test=y_test_ekg, learner='Decision Tree', dataset="Arrhythmia (EKG)", class_names=ekg_classes, feature_names=ekg_features)
-print('Leaves count before pruning: %d' % ekg_estimator.get_n_leaves())
+# print('Leaves count before pruning: %d' % ekg_estimator.get_n_leaves())
 plot_tree(clf=ekg_estimator, featureNames=ekg_features, fileName="Pre-pruned Arrhythmia (EKG) DT.png")
 
 # Prune the classifier, plot learning curves, and evaluate the final classifier
 pruned_ekg_clf = prune(ekg_estimator, threshold=5)
-print('Leaves count after pruning: %d' % pruned_ekg_clf.get_n_leaves())
+# print('Leaves count after pruning: %d' % pruned_ekg_clf.get_n_leaves())
 plot_tree(clf=pruned_ekg_clf, featureNames=ekg_features, fileName="Post-pruned Arrhythmia DT.png")
 ekg_train_sizes, ekg_train_scores_mean, ekg_train_time_mean, ekg_test_time_mean = plot_learning_curve(estimator=pruned_ekg_clf, learner='Decision Tree', dataset="Arrhythmia (EKG)", X_train=X_ekg, y_train=y_ekg, cv=4)
 ekg_dt_test_f1, ekg_dt_test_acc, ekg_dt_test_precision, ekg_dt_test_recall, ekg_dt_train_time, ekg_dt_test_time = evaluate_classifier(classifier=pruned_ekg_clf, X_train=X_train_res_ekg, X_test=X_test_ekg, y_train=y_train_res_ekg, y_test=y_test_ekg, learner='Decision Tree', dataset="Arrhythmia (EKG)", class_names=ekg_classes, feature_names=ekg_features)
@@ -628,8 +629,6 @@ print("Done with Arrhythmia Decision Tree")
 # =================================
 #   Boosted Decision Tree Learner
 # =================================
-from sklearn.ensemble import GradientBoostingClassifier
-
 def boostedDT(X_train, y_train, X_test, y_test, max_depth, datasetName):
     f1_test = []
     f1_train = []
